@@ -1,6 +1,6 @@
 package br.com.bandeiramagalhaes.todolist.user;
 
-import org.apache.coyote.Response;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,9 @@ public class UserController {
     if (user != null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário já existe!");
     }
+
+    userModel.setPassword(BCrypt.withDefaults().hashToString(12, userModel.getPassword().toCharArray()));
+
     return ResponseEntity.status(HttpStatus.CREATED).body(this.userRepository.save(userModel));
   }
 }
